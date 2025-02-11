@@ -3,7 +3,7 @@ deployment:
   replicaCount: 1
 image:
   repository: opqtech/tetris
-  tag: :v1.0.0
+  tag: v1.0.0
   containerPort: 3000
 service:
   type: ClusterIP
