@@ -1,0 +1,19 @@
+resources: 
+- deployment.yaml
+- service.yaml
+
+commonLabels:
+  app: tetris
+
+commonAnnotations:
+  app: tetris-annontations
+
+namePrefix:
+  opq-
+
+nameSuffix:
+  -v1
+
+configMapGenerator:
+- name: tetris-map
+  env: config.properties

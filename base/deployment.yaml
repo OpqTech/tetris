@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tetris
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tetris
+  template:
+    metadata:
+      labels:
+        app: tetris
+    spec:
+      containers:
+      - image: opqtech/tetris:v1.0.0
+        name: tetris
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: "0.2"
+            memory: 300Mi
+          requests:
+            cpu: "0.1"
+            memory: 200Mi
+        volumeMounts:
+        - name: tetris-volume
+          mountPath: /data/            
+      volumes:
+      - name: tetris-volume
+        configMap:
+          name: tetris-properties   
