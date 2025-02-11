@@ -1,0 +1,11 @@
+bases:
+- ../../base
+
+namespace: staging
+
+patches:
+- deployment-replicas.yaml
+
+configMapGenerator:
+- name: tetris-map
+  env: config.properties
