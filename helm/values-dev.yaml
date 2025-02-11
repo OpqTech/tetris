@@ -1,6 +1,6 @@
 deployment:
   name: tetris
-  replicaCount: 1
+  replicaCount: 3
 image:
   repository: opqtech/tetris
   tag: v1.0.0
