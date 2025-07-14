@@ -1,22 +1,22 @@
-@Library('sharedlibrary')_
-
 pipeline {
-    parameters {
-        string 'GIT_URL'
-        string 'BRANCH_NAME'
-        string 'repository'       
-    }
-    environment {
-        gitRepoURL = "${params.GIT_URL}"
-        gitBranchName = "${params.BRANCH_NAME}"
-        repoName = "${params.repository}"
-        dockerImage = "891543987898.dkr.ecr.ap-south-1.amazonaws.com/${repoName}"
-        gitCommit = "${GIT_COMMIT[0..6]}"
-        dockerTag = "${params.BRANCH_NAME}-${gitCommit}"
-    }
-     
-
     agent {label 'docker'}
+	
+    environment {
+        gitRepoURL = "${env.GIT_URL}"
+        gitBranchName = "${env.BRANCH_NAME}"
+        repoName = sh(script: "basename -s .git ${GIT_URL}", returnStdout: true).trim()
+        dockerImage = "879381264703.dkr.ecr.ap-south-1.amazonaws.com/${repoName}"
+        branchName = sh(script: 'echo $BRANCH_NAME | sed "s#/#-#"', returnStdout: true).trim()
+        gitCommit = "${GIT_COMMIT[0..6]}"
+        dockerTag = "${branchName}-${gitCommit}"
+        snykOrg = "14141617-a2e0-4a4f-b558-dce1ea5cad2d"
+        SCANNER_HOME=tool 'sonar-scanner'
+    }
+    
+	libraries {
+		lib('sharedlibrary')
+
+
     stages {
         stage('Git Checkout') {
             steps {
@@ -24,11 +24,45 @@ pipeline {
             }
         }
 
+        // stage("Sonarqube Analysis ") {
+        //     steps {
+        //         withSonarQubeEnv('sonar-server') {
+        //             dir('src') { 
+        //                 sh '''
+        //                 $SCANNER_HOME/bin/sonar-scanner \
+        //                 -Dsonar.projectName="$repoName" \
+        //                 -Dsonar.projectKey="$repoName"
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
+
+        // stage("quality gate"){
+        //    steps {
+        //         script {
+        //             waitForQualityGate abortPipeline: false, credentialsId: 'sonarToken' 
+        //         }
+        //     } 
+        // }
+
         stage('Docker Build') {
             steps {
                     dockerImageBuild('$dockerImage', '$dockerTag')
             }
         }
+
+        // stage('Snyk Scan') {
+        //     steps {
+        //         snykImageScan('$dockerImage', '$dockerTag', 'snykCred', '$snykOrg')
+        //     }
+        // }
+
+        // stage('Trivy Scan') {
+        //     steps {
+        //         sh "trivy image -f json -o results-${BUILD_NUMBER}.json ${dockerImage}:${dockerTag}"
+        //     }
+        // }
 
         stage('Docker Push') {
             steps {
@@ -41,19 +75,27 @@ pipeline {
                 branch 'development'
             }
             steps {
-                kubernetesEKSHelmDeploy('$dockerImage', '$dockerTag', '$repoName', 'awsCred', 'ap-south-1', 'opq', 'dev')
+                kubernetesEKSHelmDeployEnv('$dockerImage', '$dockerTag', '$repoName', 'awsCred', 'ap-south-1', 'eks-cluster', 'dev')
             }
         }
 
         stage('Kubernetes Deploy - UAT') {        
             when {
+                branch 'master_staging'
+            }
+            steps {
+                kubernetesEKSHelmDeployEnv('$dockerImage', '$dockerTag', '$repoName', 'awsCred', 'ap-south-1', 'eks-cluster', 'uat')
+            }
+        }
+
+        stage('Kubernetes Deploy - PROD') {
+            when {
                 branch 'master'
             }
             steps {
-                kubernetesEKSHelmDeploy('$dockerImage', '$dockerTag', '$repoName', 'awsCred', 'ap-south-1', 'opq', 'uat')
+                kubernetesEKSHelmDeployEnv('$dockerImage', '$dockerTag', '$repoName', 'awsCred', 'ap-south-1', 'eks-cluster', 'prod')
             }
         }
 
     }
 }
-
