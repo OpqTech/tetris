@@ -3,6 +3,14 @@ kind: Application
 metadata:
   name: tetris
   namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.teams: teams
+    notifications.argoproj.io/subscribe.on-sync-failed.teams: teams
+    notifications.argoproj.io/subscribe.on-health-degraded.teams: teams
+    notifications.argoproj.io/subscribe.on-created.teams: teams
+    notifications.argoproj.io/subscribe.on-deployed.teams: teams
+    notifications.argoproj.io/subscribe.on-sync-running.teams: teams
+    notifications.argoproj.io/subscribe.on-deleted.teams: teams
 spec:
   destination:
     namespace: default
@@ -10,7 +18,7 @@ spec:
   source:
     path: manifests
     repoURL: 'https://github.com/OpqTech/tetris.git'
-    targetRevision: argo-cd
+    targetRevision: test
   project: default
   syncPolicy:
     automated:
