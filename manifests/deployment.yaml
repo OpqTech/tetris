@@ -13,7 +13,7 @@ spec:
         app: tetris
     spec:
       containers:
-      - image: opqtech/tetris:v1.0.0
+      - image: opqtech/k8s-helloworld
         name: tetris
         ports:
         - containerPort: 3000
