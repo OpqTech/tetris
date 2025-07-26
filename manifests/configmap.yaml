@@ -5,4 +5,4 @@ metadata:
 data:
   tetris.properties: |
     application_name=tetris
-    version=v1.0.0
+    version=v1.1.0
