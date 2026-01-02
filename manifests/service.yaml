@@ -6,7 +6,7 @@ spec:
   type: NodePort
   ports:
   - port: 3000
-    targetPort: 3000
-    nodePort: 31000
+    targetPort: 80
+    nodePort: 32000
   selector:
     app: tetris

@@ -4,9 +4,9 @@ deployment:
 image:
   repository: opqtech/tetris
   tag: v1.0.0
-  containerPort: 3000
+  containerPort: 80
 service:
-  type: ClusterIP
+  type: NodePort
   clusterIPPort: 3000
 resource:
   cpu:

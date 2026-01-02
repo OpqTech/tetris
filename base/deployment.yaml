@@ -16,7 +16,7 @@ spec:
       - image: opqtech/tetris:v1.0.0
         name: tetris
         ports:
-        - containerPort: 3000
+        - containerPort: 80
         resources:
           limits:
             cpu: "0.2"

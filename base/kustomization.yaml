@@ -2,8 +2,11 @@ resources:
 - deployment.yaml
 - service.yaml
 
-commonLabels:
-  app: tetris
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: tetris
 
 commonAnnotations:
   app: tetris-annontations
@@ -15,5 +18,5 @@ nameSuffix:
   -v1
 
 configMapGenerator:
-- name: tetris-map
+- name: tetris-properties
   env: config.properties
