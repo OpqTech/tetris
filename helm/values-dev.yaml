@@ -1,12 +1,12 @@
 deployment:
   name: tetris
-  replicaCount: 1
+  replicaCount: 3
 image:
-  repository: 891543987898.dkr.ecr.ap-south-1.amazonaws.com
-  tag: 1
-  containerPort: 3000
+  repository: opqtech/tetris
+  tag: v1.0.0
+  containerPort: 80
 service:
-  type: ClusterIP
+  type: NodePort
   clusterIPPort: 3000
 resource:
   cpu:

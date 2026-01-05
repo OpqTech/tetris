@@ -1,0 +1,12 @@
+resources:
+- ../../base
+
+namespace: prod
+
+patches:
+- path: deployment-replicas.yaml
+
+configMapGenerator:
+- name: tetris-properties
+  behavior: replace
+  env: config.properties
