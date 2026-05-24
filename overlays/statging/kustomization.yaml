@@ -1,7 +1,7 @@
 resources:
 - ../../base
 
-namespace: staging
+namespace: statging
 
 patches:
 - path: deployment-replicas.yaml
