@@ -1,0 +1,22 @@
+resources: 
+- deployment.yaml
+- service.yaml
+
+labels:
+  - includeSelectors: true
+    includeTemplates: true
+    pairs:
+      app: tetris
+
+commonAnnotations:
+  app: tetris-annontations
+
+namePrefix:
+  opq-
+
+nameSuffix:
+  -v1
+
+configMapGenerator:
+- name: tetris-properties
+  env: config.properties

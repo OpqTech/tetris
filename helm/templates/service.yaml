@@ -4,6 +4,7 @@ metadata:
   name: {{ .Values.deployment.name }}-svc
   namespace: {{ .Values.namespace }}
 spec:
+  type: {{ .Values.service.type }}
   ports:
   - port: {{ .Values.service.clusterIPPort }}
     targetPort: {{ .Values.image.containerPort }}

@@ -1,0 +1,8 @@
+apiVersion: v1 
+kind: ConfigMap 
+metadata: 
+  name: tetris-properties          
+data:
+  tetris.properties: |
+    application_name=tetris
+    version=v1.0.0
